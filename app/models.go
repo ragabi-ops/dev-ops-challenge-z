@@ -10,7 +10,7 @@ type ItemDAO interface {
 
 type Item struct {
 	CodeName   string `json:"codeName"`
-	SecretCode string `json:""secretCode"`
+	SecretCode string `json:"secretCode"`
 }
 
 type HealthCheck struct {

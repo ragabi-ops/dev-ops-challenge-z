@@ -11,7 +11,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 )
 
-func listTable() {
+func ListTable() {
 	sess, err := getSession()
 	genericErrorHandler(err)
 
