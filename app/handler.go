@@ -5,12 +5,12 @@ import (
 	"net/http"
 )
 
-func (it *Item) GetItemJson(w http.ResponseWriter, r *http.Request) {
+func (i *Item) GetItemJson(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	w.Header().Set("Content-Type", "application/json")
 
-	item, err := it.getItem()
+	item, err := i.getItem()
 
 	if err != nil {
 		sendWebErr(w, http.StatusInternalServerError, err.Error())
