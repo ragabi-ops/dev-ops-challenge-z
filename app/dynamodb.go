@@ -8,6 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
+	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 )
 
 func listTable() {
@@ -31,7 +32,7 @@ func listTable() {
 	}
 }
 
-func getSecret() {
+func getItem() {
 	sess, err := getSession()
 	genericErrorHandler(err)
 
@@ -40,7 +41,7 @@ func getSecret() {
 	timeoutCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	secret, err := dbSvc.GetItemWithContext(timeoutCtx, &dynamodb.GetItemInput{
+	result, err := dbSvc.GetItemWithContext(timeoutCtx, &dynamodb.GetItemInput{
 		Key: map[string]*dynamodb.AttributeValue{
 			"codeName": {
 				S: aws.String("theDoctor"),
@@ -50,10 +51,18 @@ func getSecret() {
 	})
 
 	if err != nil {
-		log.Println(err)
+		log.Fatalf("Got error calling GetItem: %s", err)
 	}
 
-	log.Println(secret.Item["secretCode"])
+	if result.Item == nil {
+		log.Println("No Item Was found")
+	}
+
+	item := Item{}
+
+	err = dynamodbattribute.UnmarshalMap(result.Item, &item)
+	genericErrorHandler(err)
+
 }
 
 func genericErrorHandler(err error) {
