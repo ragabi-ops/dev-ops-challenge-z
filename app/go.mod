@@ -1,4 +1,4 @@
-module github.com/ragabi-ops/dev-ops-challenge-z/app
+module github.com/ragabi-ops/dev-ops-challenge-z
 
 go 1.17
 

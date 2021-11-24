@@ -4,6 +4,10 @@ import (
 	"github.com/gorilla/mux"
 )
 
+type ItemDAO interface {
+	GetItemJson(item Item)
+}
+
 type Item struct {
 	CodeName   string `json:"codeName"`
 	SecretCode string `json:""secretCode"`

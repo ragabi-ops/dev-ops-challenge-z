@@ -32,7 +32,7 @@ func listTable() {
 	}
 }
 
-func getItem() {
+func (it *Item) getItem() (Item, error) {
 	sess, err := getSession()
 	genericErrorHandler(err)
 
@@ -63,13 +63,16 @@ func getItem() {
 	err = dynamodbattribute.UnmarshalMap(result.Item, &item)
 	genericErrorHandler(err)
 
+	return item, nil
+
 }
 
-func genericErrorHandler(err error) {
+func genericErrorHandler(err error) error {
 	if err != nil {
 		log.Println(err)
-		return
+		return err
 	}
+	return nil
 }
 
 func getSession() (*session.Session, error) {
