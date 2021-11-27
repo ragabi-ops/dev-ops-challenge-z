@@ -21,7 +21,7 @@ func (hc *HealthCheck) ListTable() (HealthCheck, error) {
 	defer cancel()
 
 	health := HealthCheck{}
-	health.DockerRepo = "gcr.io/ragabi-ops/zcexample"
+	health.DockerRepo = "ghcr.io/ragabi-ops/go-app"
 	health.Status = "Healthy"
 
 	tables, err := dbSvc.ListTablesWithContext(timeoutCtx, &dynamodb.ListTablesInput{})
