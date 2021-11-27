@@ -5,6 +5,20 @@ import (
 	"net/http"
 )
 
+func (hc *HealthCheck) GetHealthCheckJson(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	w.Header().Set("Content-Type", "application/json")
+
+	health, _ := hc.ListTable()
+
+	err := json.NewEncoder(w).Encode(health)
+	if err != nil {
+		sendWebErr(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+}
+
 func (i *Item) GetItemJson(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
@@ -20,6 +34,7 @@ func (i *Item) GetItemJson(w http.ResponseWriter, r *http.Request) {
 	err = json.NewEncoder(w).Encode(item)
 	if err != nil {
 		sendWebErr(w, http.StatusInternalServerError, err.Error())
+		return
 	}
 }
 

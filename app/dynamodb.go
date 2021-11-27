@@ -11,7 +11,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 )
 
-func ListTable() {
+func (hc *HealthCheck) ListTable() (HealthCheck, error) {
 	sess, err := getSession()
 	genericErrorHandler(err)
 
@@ -20,16 +20,23 @@ func ListTable() {
 	timeoutCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
+	health := HealthCheck{}
+	health.DockerRepo = "gcr.io/ragabi-ops/zcexample"
+	health.Status = "Healthy"
+
 	tables, err := dbSvc.ListTablesWithContext(timeoutCtx, &dynamodb.ListTablesInput{})
 	if err != nil {
-		log.Println(err)
-		return
+		log.Println(err.Error())
+		health.Status = "Unhealty"
+		return health, err
 	}
 
 	log.Println("Tables:")
 	for _, table := range tables.TableNames {
 		log.Println(*table)
 	}
+
+	return health, nil
 }
 
 func (it *Item) getItem() (Item, error) {
@@ -51,7 +58,7 @@ func (it *Item) getItem() (Item, error) {
 	})
 
 	if err != nil {
-		log.Fatalf("Got error calling GetItem: %s", err)
+		log.Printf("Got error calling GetItem: %s", err)
 	}
 
 	if result.Item == nil {
@@ -77,12 +84,12 @@ func genericErrorHandler(err error) error {
 
 func getSession() (*session.Session, error) {
 	sess, err := session.NewSession(&aws.Config{
-		Region:   aws.String("us-east-1"),
-		Endpoint: aws.String("http://localhost:8000")})
+		CredentialsChainVerboseErrors: aws.Bool(true),
+		Region:                        aws.String("us-east-1"),
+		Endpoint:                      aws.String("http://local-dynamo-service:8000")})
 	if err != nil {
 		log.Println(err)
 		return sess, err
 	}
-
 	return sess, nil
 }

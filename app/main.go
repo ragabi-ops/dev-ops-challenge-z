@@ -7,15 +7,12 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// type appContext struct {
-// 	sess  *session.Session
-// 	dbSvc *dynamodb.DynamoDB
-// }
-
 func (a *App) start() {
 	log.Println("Server is Running on port 5000")
 	var it Item
-
+	var hc HealthCheck
+	a.r.HandleFunc("/", hc.GetHealthCheckJson).Methods("GET")
+	a.r.HandleFunc("/health", hc.GetHealthCheckJson).Methods("GET")
 	a.r.HandleFunc("/secret", it.GetItemJson).Methods("GET")
 	log.Fatal(http.ListenAndServe(":5000", a.r))
 }

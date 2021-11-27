@@ -13,6 +13,10 @@ type Item struct {
 	SecretCode string `json:"secretCode"`
 }
 
+type HealthCheckDAO interface {
+	ListTable()
+	GetHealthCheckJson(hc HealthCheck)
+}
 type HealthCheck struct {
 	Status     string `json:"status"`
 	DockerRepo string `json:"dockerRepo"`

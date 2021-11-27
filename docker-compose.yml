@@ -1,14 +1,14 @@
 version: '3.9'
 services:
-  dynamo-db:
+  local-dynamo-service:
     image: zestyco/dynamodb-challenge:amd
     ports:
       - "8000:8000"
-  app:
+  go-app:
     build: 
       context: .
       dockerfile: app/Dockerfile
     ports:
       - "5000:5000"
     depends_on:
-      - "dynamo-db"
+      - "local-dynamo-service"
